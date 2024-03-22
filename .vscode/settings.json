@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    "stm32f7xx_hal.h": "c",
+    "stm32f7xx_hal_conf.h": "c",
+    "opt.h": "c",
+    "tcp.h": "c",
+    "main.h": "c",
+    "memp_std.h": "c"
+  },
+  "cortex-debug.gdbPath": "/opt/homebrew/bin/arm-none-eabi-gdb",
+  "cortex-debug.stutilPath": "/opt/homebrew/bin/st-util",
+  "cortex-debug.variableUseNaturalFormat": true
+}
