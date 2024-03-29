@@ -122,7 +122,7 @@ static err_t tcp_server_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err
         /* initialize LwIP tcp_sent callback function */
         tcp_sent(pcb, tcp_server_sent);
         /* handle received data */
-        tcp_server_handle_input(pcb, es);
+        tcp_server_send(pcb, es);
 
         ret_err = ERR_OK;
     }
@@ -139,6 +139,7 @@ static err_t tcp_server_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err
             struct pbuf *ptr;
             /* chain pbufs to the end of what we recv'ed previously  */
             ptr = es->p;
+            LWIP_ASSERT("Same pbuf", ptr != p);
             pbuf_chain(ptr, p);
         }
         ret_err = ERR_OK;
@@ -238,12 +239,15 @@ static void tcp_server_send(struct tcp_pcb *pcb, struct tcp_server_struct *es)
     struct pbuf *ptr;
     err_t wr_err = ERR_OK;
 
+    printf("Sending data\n");
+
     while ((wr_err == ERR_OK) &&
            (es->p != NULL) &&
            (es->p->len <= tcp_sndbuf(pcb)))
     {
         /* get pointer on pbuf from es structure */
         ptr = es->p;
+        printf("Sending ptr: 0x%08x\n", ptr);
 
         /* enqueue data for transmission */
         wr_err = tcp_write(pcb, ptr->payload, ptr->len, 1);
@@ -260,6 +264,11 @@ static void tcp_server_send(struct tcp_pcb *pcb, struct tcp_server_struct *es)
             {
                 /* new reference! */
                 pbuf_ref(es->p);
+            }
+
+            if (ptr->ref == 0)
+            {
+                printf("Ref count is 0\n");
             }
 
             /* chop first pbuf from chain */
@@ -331,5 +340,5 @@ static void tcp_server_handle_input(struct tcp_pcb *pcb, struct tcp_server_struc
 
     tcp_server_send(pcb, esTx);
 
-    pbuf_free(es->p);
+    // pbuf_free(es->p);
 }

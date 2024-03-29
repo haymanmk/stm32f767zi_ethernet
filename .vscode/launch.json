@@ -19,7 +19,7 @@
       "swoConfig": {}
     },
     {
-      "name": "STlink Debug",
+      "name": "STlink Attach",
       "cwd": "${workspaceFolder}",
       "executable": "${workspaceFolder}/build/stm32f767zi_ethernet.elf",
       "request": "attach",
@@ -31,6 +31,62 @@
       "preLaunchTask": "Build all",
       "svdFile": "${workspaceFolder}/STM32F767.svd",
       "swoConfig": {}
+    },
+    {
+      "name": "J-Link Debug",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/stm32f767zi_ethernet.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "runToEntryPoint": "main",
+      "servertype": "jlink",
+      "device": "STM32F767ZI",
+      "interface": "swd",
+      "preLaunchTask": "Build all",
+      "svdFile": "${workspaceFolder}/STM32F767.svd",
+      "swoConfig": {
+        "enabled": true,
+        "cpuFrequency": 216000000,
+        "swoFrequency": 2000000,
+        "source": "probe",
+        "decoders": [
+          {
+            "label": "ITM port 0 output",
+            "type": "console",
+            "port": 0,
+            "showOnStartup": true,
+            "encoding": "ascii"
+          }
+        ]
+      }
+    },
+    {
+      "name": "J-Link Attach",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/stm32f767zi_ethernet.elf",
+      "request": "attach",
+      "type": "cortex-debug",
+      "runToEntryPoint": "main",
+      "servertype": "jlink",
+      "device": "STM32F767ZI",
+      "interface": "swd",
+      "preLaunchTask": "Build all",
+      "svdFile": "${workspaceFolder}/STM32F767.svd",
+      "swoConfig": {
+        "enabled": true,
+        "cpuFrequency": 216000000,
+        "swoFrequency": 2000000,
+        "source": "probe",
+        "decoders": [
+          {
+            "label": "ITM port 0 output",
+            "type": "console",
+            "port": 0,
+            "showOnStartup": true,
+            "encoding": "ascii"
+          }
+        ]
+      }
     }
   ]
 }

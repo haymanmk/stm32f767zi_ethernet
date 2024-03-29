@@ -426,7 +426,24 @@ err_t ethernetif_init(struct netif *netif)
 void pbuf_free_custom(struct pbuf *p)
 {
   struct pbuf_custom *custom_pbuf = (struct pbuf_custom *)p;
-  LWIP_MEMPOOL_FREE(RX_POOL, custom_pbuf);
+
+  // check if memp_RX_POOL has custom_pbuf.
+  u32_t tab = *memp_RX_POOL.tab;
+  while (tab != 0x0)
+  {
+    if (tab == (u32_t)custom_pbuf)
+    {
+      printf("tab == custom_pbuf\n");
+      break;
+    }
+    u32_t *tab_ptr = (u32_t *)tab;
+    tab = *((u32_t *)tab);
+  }
+  if (custom_pbuf != tab)
+  {
+    LWIP_MEMPOOL_FREE(RX_POOL, custom_pbuf);
+    printf("free pbuf: 0x%x\n", (unsigned int)custom_pbuf);
+  }
 
   /* If the Rx Buffer Pool was exhausted, signal the ethernetif_input task to
    * call HAL_ETH_GetRxDataBuffer to rebuild the Rx descriptors. */
@@ -690,6 +707,7 @@ void HAL_ETH_RxAllocateCallback(uint8_t **buff)
 {
   /* USER CODE BEGIN HAL ETH RxAllocateCallback */
   struct pbuf_custom *p = LWIP_MEMPOOL_ALLOC(RX_POOL);
+  printf("pbuf allocated: 0x%x\n", (unsigned int)p);
   if (p)
   {
     /* Get the buff from the struct pbuf address. */
@@ -721,6 +739,7 @@ void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t 
   p->next = NULL;
   p->tot_len = 0;
   p->len = Length;
+  printf("pbuf linked: 0x%x\n", (unsigned int)p);
 
   /* Chain the buffer. */
   if (!*ppStart)
@@ -735,11 +754,13 @@ void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t 
   }
   *ppEnd = p;
 
+  u32_t total_length = 0;
   /* Update the total length of all the buffers of the chain. Each pbuf in the chain should have its tot_len
    * set to its own length, plus the length of all the following pbufs in the chain. */
   for (p = *ppStart; p != NULL; p = p->next)
   {
     p->tot_len += Length;
+    total_length += Length;
   }
 
   /* Invalidate data cache because Rx DMA's writing to physical memory makes it stale. */

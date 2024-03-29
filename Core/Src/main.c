@@ -66,7 +66,6 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  volatile u32_t counter = 0;
 
   /* USER CODE END 1 */
 
@@ -98,9 +97,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    counter++;
-
     Ethernetif_Input(&gnetif);
+    // ethernetif_input(&gnetif);
 
     sys_check_timeouts();
 

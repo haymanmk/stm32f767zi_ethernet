@@ -178,106 +178,114 @@
 #include "stm32f7xx_hal.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
-  * @{
-  */
+ * @{
+ */
 #ifdef HAL_ETH_MODULE_ENABLED
 
 #if defined(ETH)
 
 /** @defgroup ETH ETH
-  * @brief ETH HAL module driver
-  * @{
-  */
+ * @brief ETH HAL module driver
+ * @{
+ */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /** @addtogroup ETH_Private_Constants ETH Private Constants
-  * @{
-  */
-#define ETH_MACCR_MASK          0xFFFB7F7CU
-#define ETH_MACECR_MASK         0x3F077FFFU
-#define ETH_MACFFR_MASK         0x800007FFU
-#define ETH_MACWTR_MASK         0x0000010FU
-#define ETH_MACTFCR_MASK        0xFFFF00F2U
-#define ETH_MACRFCR_MASK        0x00000003U
-#define ETH_MTLTQOMR_MASK       0x00000072U
-#define ETH_MTLRQOMR_MASK       0x0000007BU
-							    
-#define ETH_DMAMR_MASK          0x00007802U
-#define ETH_DMASBMR_MASK        0x0000D001U
-#define ETH_DMACCR_MASK         0x00013FFFU
-#define ETH_DMACTCR_MASK        0x003F1010U
-#define ETH_DMACRCR_MASK        0x803F0000U
-#define ETH_MACPMTCSR_MASK      (ETH_MACPMTCSR_PD | ETH_MACPMTCSR_WFE | \
-                                 ETH_MACPMTCSR_MPE | ETH_MACPMTCSR_GU)
+ * @{
+ */
+#define ETH_MACCR_MASK 0xFFFB7F7CU
+#define ETH_MACECR_MASK 0x3F077FFFU
+#define ETH_MACFFR_MASK 0x800007FFU
+#define ETH_MACWTR_MASK 0x0000010FU
+#define ETH_MACTFCR_MASK 0xFFFF00F2U
+#define ETH_MACRFCR_MASK 0x00000003U
+#define ETH_MTLTQOMR_MASK 0x00000072U
+#define ETH_MTLRQOMR_MASK 0x0000007BU
+
+#define ETH_DMAMR_MASK 0x00007802U
+#define ETH_DMASBMR_MASK 0x0000D001U
+#define ETH_DMACCR_MASK 0x00013FFFU
+#define ETH_DMACTCR_MASK 0x003F1010U
+#define ETH_DMACRCR_MASK 0x803F0000U
+#define ETH_MACPMTCSR_MASK (ETH_MACPMTCSR_PD | ETH_MACPMTCSR_WFE | \
+                            ETH_MACPMTCSR_MPE | ETH_MACPMTCSR_GU)
 
 /* Timeout values */
-#define ETH_SWRESET_TIMEOUT     500U
-#define ETH_MDIO_BUS_TIMEOUT    1000U
+#define ETH_SWRESET_TIMEOUT 500U
+#define ETH_MDIO_BUS_TIMEOUT 1000U
 
 #define ETH_DMARXDESC_ERRORS_MASK ((uint32_t)(ETH_DMARXDESC_DBE | ETH_DMARXDESC_RE | \
-                                              ETH_DMARXDESC_OE  | ETH_DMARXDESC_RWT |\
-                                              ETH_DMARXDESC_LC | ETH_DMARXDESC_CE |\
+                                              ETH_DMARXDESC_OE | ETH_DMARXDESC_RWT | \
+                                              ETH_DMARXDESC_LC | ETH_DMARXDESC_CE |  \
                                               ETH_DMARXDESC_DE | ETH_DMARXDESC_IPV4HCE))
 
-#define ETH_MAC_US_TICK         1000000U
+#define ETH_MAC_US_TICK 1000000U
 
-#define ETH_MACTSCR_MASK        0x0087FF2FU
+#define ETH_MACTSCR_MASK 0x0087FF2FU
 
-#define ETH_PTPTSHR_VALUE       0xFFFFFFFFU
-#define ETH_PTPTSLR_VALUE       0xBB9ACA00U
+#define ETH_PTPTSHR_VALUE 0xFFFFFFFFU
+#define ETH_PTPTSLR_VALUE 0xBB9ACA00U
 
 /* Ethernet MACMIIAR register Mask */
-#define ETH_MACMIIAR_CR_MASK    0xFFFFFFE3U
+#define ETH_MACMIIAR_CR_MASK 0xFFFFFFE3U
 
 /* Delay to wait when writing to some Ethernet registers */
-#define ETH_REG_WRITE_DELAY     0x00000001U
+#define ETH_REG_WRITE_DELAY 0x00000001U
 
 /* ETHERNET MACCR register Mask */
-#define ETH_MACCR_CLEAR_MASK    0xFF20810FU
+#define ETH_MACCR_CLEAR_MASK 0xFF20810FU
 
 /* ETHERNET MACFCR register Mask */
-#define ETH_MACFCR_CLEAR_MASK   0x0000FF41U
+#define ETH_MACFCR_CLEAR_MASK 0x0000FF41U
 
 /* ETHERNET DMAOMR register Mask */
-#define ETH_DMAOMR_CLEAR_MASK   0xF8DE3F23U
+#define ETH_DMAOMR_CLEAR_MASK 0xF8DE3F23U
 
 /* ETHERNET MAC address offsets */
-#define ETH_MAC_ADDR_HBASE      (uint32_t)(ETH_MAC_BASE + 0x40U)  /* ETHERNET MAC address high offset */
-#define ETH_MAC_ADDR_LBASE      (uint32_t)(ETH_MAC_BASE + 0x44U)  /* ETHERNET MAC address low offset */
+#define ETH_MAC_ADDR_HBASE (uint32_t)(ETH_MAC_BASE + 0x40U) /* ETHERNET MAC address high offset */
+#define ETH_MAC_ADDR_LBASE (uint32_t)(ETH_MAC_BASE + 0x44U) /* ETHERNET MAC address low offset */
 
 /* ETHERNET DMA Rx descriptors Frame length Shift */
-#define  ETH_DMARXDESC_FRAMELENGTHSHIFT            16U
+#define ETH_DMARXDESC_FRAMELENGTHSHIFT 16U
 /**
-  * @}
-  */
+ * @}
+ */
 
 /* Private macros ------------------------------------------------------------*/
 /** @defgroup ETH_Private_Macros ETH Private Macros
-  * @{
-  */
+ * @{
+ */
 /* Helper macros for TX descriptor handling */
-#define INCR_TX_DESC_INDEX(inx, offset) do {\
-                                             (inx) += (offset);\
-                                             if ((inx) >= (uint32_t)ETH_TX_DESC_CNT){\
-                                             (inx) = ((inx) - (uint32_t)ETH_TX_DESC_CNT);}\
-                                           } while (0)
+#define INCR_TX_DESC_INDEX(inx, offset)            \
+  do                                               \
+  {                                                \
+    (inx) += (offset);                             \
+    if ((inx) >= (uint32_t)ETH_TX_DESC_CNT)        \
+    {                                              \
+      (inx) = ((inx) - (uint32_t)ETH_TX_DESC_CNT); \
+    }                                              \
+  } while (0)
 
 /* Helper macros for RX descriptor handling */
-#define INCR_RX_DESC_INDEX(inx, offset) do {\
-                                             (inx) += (offset);\
-                                             if ((inx) >= (uint32_t)ETH_RX_DESC_CNT){\
-                                             (inx) = ((inx) - (uint32_t)ETH_RX_DESC_CNT);}\
-                                           } while (0)
+#define INCR_RX_DESC_INDEX(inx, offset)            \
+  do                                               \
+  {                                                \
+    (inx) += (offset);                             \
+    if ((inx) >= (uint32_t)ETH_RX_DESC_CNT)        \
+    {                                              \
+      (inx) = ((inx) - (uint32_t)ETH_RX_DESC_CNT); \
+    }                                              \
+  } while (0)
 /**
-  * @}
-  */
+ * @}
+ */
 /* Private function prototypes -----------------------------------------------*/
 /** @defgroup ETH_Private_Functions   ETH Private Functions
-  * @{
-  */
-static void ETH_SetMACConfig(ETH_HandleTypeDef *heth,  ETH_MACConfigTypeDef *macconf);
-static void ETH_SetDMAConfig(ETH_HandleTypeDef *heth,  ETH_DMAConfigTypeDef *dmaconf);
+ * @{
+ */
+static void ETH_SetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTypeDef *macconf);
+static void ETH_SetDMAConfig(ETH_HandleTypeDef *heth, ETH_DMAConfigTypeDef *dmaconf);
 static void ETH_MACDMAConfig(ETH_HandleTypeDef *heth);
 static void ETH_DMATxDescListInit(ETH_HandleTypeDef *heth);
 static void ETH_DMARxDescListInit(ETH_HandleTypeDef *heth);
@@ -290,13 +298,13 @@ static void ETH_MACAddressConfig(ETH_HandleTypeDef *heth, uint32_t MacAddr, uint
 static void ETH_InitCallbacksToDefault(ETH_HandleTypeDef *heth);
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 /**
-  * @}
-  */
+ * @}
+ */
 
 /* Exported functions ---------------------------------------------------------*/
 /** @defgroup ETH_Exported_Functions ETH Exported Functions
-  * @{
-  */
+ * @{
+ */
 
 /** @defgroup ETH_Exported_Functions_Group1 Initialization and deinitialization functions
   *  @brief    Initialization and Configuration functions
@@ -327,11 +335,11 @@ static void ETH_InitCallbacksToDefault(ETH_HandleTypeDef *heth);
   */
 
 /**
-  * @brief  Initialize the Ethernet peripheral registers.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Initialize the Ethernet peripheral registers.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
 {
   uint32_t tickstart;
@@ -392,10 +400,8 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
     }
   }
 
-
   /*------------------ MAC, MTL and DMA default Configuration ----------------*/
   ETH_MACDMAConfig(heth);
-
 
   /*------------------ DMA Tx Descriptors Configuration ----------------------*/
   ETH_DMATxDescListInit(heth);
@@ -413,11 +419,11 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  DeInitializes the ETH peripheral.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  DeInitializes the ETH peripheral.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_DeInit(ETH_HandleTypeDef *heth)
 {
   /* Set the ETH peripheral state to BUSY */
@@ -446,11 +452,11 @@ HAL_StatusTypeDef HAL_ETH_DeInit(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Initializes the ETH MSP.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Initializes the ETH MSP.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 __weak void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -461,11 +467,11 @@ __weak void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  DeInitializes ETH MSP.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  DeInitializes ETH MSP.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 __weak void HAL_ETH_MspDeInit(ETH_HandleTypeDef *heth)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -477,21 +483,21 @@ __weak void HAL_ETH_MspDeInit(ETH_HandleTypeDef *heth)
 
 #if (USE_HAL_ETH_REGISTER_CALLBACKS == 1)
 /**
-  * @brief  Register a User ETH Callback
-  *         To be used instead of the weak predefined callback
-  * @param heth eth handle
-  * @param CallbackID ID of the callback to be registered
-  *        This parameter can be one of the following values:
-  *          @arg @ref HAL_ETH_TX_COMPLETE_CB_ID Tx Complete Callback ID
-  *          @arg @ref HAL_ETH_RX_COMPLETE_CB_ID Rx Complete Callback ID
-  *          @arg @ref HAL_ETH_ERROR_CB_ID       Error Callback ID
-  *          @arg @ref HAL_ETH_PMT_CB_ID         Power Management Callback ID
-  *          @arg @ref HAL_ETH_WAKEUP_CB_ID      Wake UP Callback ID
-  *          @arg @ref HAL_ETH_MSPINIT_CB_ID     MspInit callback ID
-  *          @arg @ref HAL_ETH_MSPDEINIT_CB_ID   MspDeInit callback ID
-  * @param pCallback pointer to the Callback function
-  * @retval status
-  */
+ * @brief  Register a User ETH Callback
+ *         To be used instead of the weak predefined callback
+ * @param heth eth handle
+ * @param CallbackID ID of the callback to be registered
+ *        This parameter can be one of the following values:
+ *          @arg @ref HAL_ETH_TX_COMPLETE_CB_ID Tx Complete Callback ID
+ *          @arg @ref HAL_ETH_RX_COMPLETE_CB_ID Rx Complete Callback ID
+ *          @arg @ref HAL_ETH_ERROR_CB_ID       Error Callback ID
+ *          @arg @ref HAL_ETH_PMT_CB_ID         Power Management Callback ID
+ *          @arg @ref HAL_ETH_WAKEUP_CB_ID      Wake UP Callback ID
+ *          @arg @ref HAL_ETH_MSPINIT_CB_ID     MspInit callback ID
+ *          @arg @ref HAL_ETH_MSPDEINIT_CB_ID   MspDeInit callback ID
+ * @param pCallback pointer to the Callback function
+ * @retval status
+ */
 HAL_StatusTypeDef HAL_ETH_RegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_CallbackIDTypeDef CallbackID,
                                            pETH_CallbackTypeDef pCallback)
 {
@@ -509,61 +515,60 @@ HAL_StatusTypeDef HAL_ETH_RegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_Call
   {
     switch (CallbackID)
     {
-      case HAL_ETH_TX_COMPLETE_CB_ID :
-        heth->TxCpltCallback = pCallback;
-        break;
+    case HAL_ETH_TX_COMPLETE_CB_ID:
+      heth->TxCpltCallback = pCallback;
+      break;
 
-      case HAL_ETH_RX_COMPLETE_CB_ID :
-        heth->RxCpltCallback = pCallback;
-        break;
+    case HAL_ETH_RX_COMPLETE_CB_ID:
+      heth->RxCpltCallback = pCallback;
+      break;
 
-      case HAL_ETH_ERROR_CB_ID :
-        heth->ErrorCallback = pCallback;
-        break;
+    case HAL_ETH_ERROR_CB_ID:
+      heth->ErrorCallback = pCallback;
+      break;
 
-      case HAL_ETH_PMT_CB_ID :
-        heth->PMTCallback = pCallback;
-        break;
+    case HAL_ETH_PMT_CB_ID:
+      heth->PMTCallback = pCallback;
+      break;
 
+    case HAL_ETH_WAKEUP_CB_ID:
+      heth->WakeUpCallback = pCallback;
+      break;
 
-      case HAL_ETH_WAKEUP_CB_ID :
-        heth->WakeUpCallback = pCallback;
-        break;
+    case HAL_ETH_MSPINIT_CB_ID:
+      heth->MspInitCallback = pCallback;
+      break;
 
-      case HAL_ETH_MSPINIT_CB_ID :
-        heth->MspInitCallback = pCallback;
-        break;
+    case HAL_ETH_MSPDEINIT_CB_ID:
+      heth->MspDeInitCallback = pCallback;
+      break;
 
-      case HAL_ETH_MSPDEINIT_CB_ID :
-        heth->MspDeInitCallback = pCallback;
-        break;
-
-      default :
-        /* Update the error code */
-        heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
-        /* Return error status */
-        status =  HAL_ERROR;
-        break;
+    default:
+      /* Update the error code */
+      heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
+      /* Return error status */
+      status = HAL_ERROR;
+      break;
     }
   }
   else if (heth->gState == HAL_ETH_STATE_RESET)
   {
     switch (CallbackID)
     {
-      case HAL_ETH_MSPINIT_CB_ID :
-        heth->MspInitCallback = pCallback;
-        break;
+    case HAL_ETH_MSPINIT_CB_ID:
+      heth->MspInitCallback = pCallback;
+      break;
 
-      case HAL_ETH_MSPDEINIT_CB_ID :
-        heth->MspDeInitCallback = pCallback;
-        break;
+    case HAL_ETH_MSPDEINIT_CB_ID:
+      heth->MspDeInitCallback = pCallback;
+      break;
 
-      default :
-        /* Update the error code */
-        heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
-        /* Return error status */
-        status =  HAL_ERROR;
-        break;
+    default:
+      /* Update the error code */
+      heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
+      /* Return error status */
+      status = HAL_ERROR;
+      break;
     }
   }
   else
@@ -571,27 +576,27 @@ HAL_StatusTypeDef HAL_ETH_RegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_Call
     /* Update the error code */
     heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
     /* Return error status */
-    status =  HAL_ERROR;
+    status = HAL_ERROR;
   }
 
   return status;
 }
 
 /**
-  * @brief  Unregister an ETH Callback
-  *         ETH callabck is redirected to the weak predefined callback
-  * @param heth eth handle
-  * @param CallbackID ID of the callback to be unregistered
-  *        This parameter can be one of the following values:
-  *          @arg @ref HAL_ETH_TX_COMPLETE_CB_ID Tx Complete Callback ID
-  *          @arg @ref HAL_ETH_RX_COMPLETE_CB_ID Rx Complete Callback ID
-  *          @arg @ref HAL_ETH_ERROR_CB_ID       Error Callback ID
-  *          @arg @ref HAL_ETH_PMT_CB_ID         Power Management Callback ID
-  *          @arg @ref HAL_ETH_WAKEUP_CB_ID      Wake UP Callback ID
-  *          @arg @ref HAL_ETH_MSPINIT_CB_ID     MspInit callback ID
-  *          @arg @ref HAL_ETH_MSPDEINIT_CB_ID   MspDeInit callback ID
-  * @retval status
-  */
+ * @brief  Unregister an ETH Callback
+ *         ETH callabck is redirected to the weak predefined callback
+ * @param heth eth handle
+ * @param CallbackID ID of the callback to be unregistered
+ *        This parameter can be one of the following values:
+ *          @arg @ref HAL_ETH_TX_COMPLETE_CB_ID Tx Complete Callback ID
+ *          @arg @ref HAL_ETH_RX_COMPLETE_CB_ID Rx Complete Callback ID
+ *          @arg @ref HAL_ETH_ERROR_CB_ID       Error Callback ID
+ *          @arg @ref HAL_ETH_PMT_CB_ID         Power Management Callback ID
+ *          @arg @ref HAL_ETH_WAKEUP_CB_ID      Wake UP Callback ID
+ *          @arg @ref HAL_ETH_MSPINIT_CB_ID     MspInit callback ID
+ *          @arg @ref HAL_ETH_MSPDEINIT_CB_ID   MspDeInit callback ID
+ * @retval status
+ */
 HAL_StatusTypeDef HAL_ETH_UnRegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
@@ -600,61 +605,60 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_Ca
   {
     switch (CallbackID)
     {
-      case HAL_ETH_TX_COMPLETE_CB_ID :
-        heth->TxCpltCallback = HAL_ETH_TxCpltCallback;
-        break;
+    case HAL_ETH_TX_COMPLETE_CB_ID:
+      heth->TxCpltCallback = HAL_ETH_TxCpltCallback;
+      break;
 
-      case HAL_ETH_RX_COMPLETE_CB_ID :
-        heth->RxCpltCallback = HAL_ETH_RxCpltCallback;
-        break;
+    case HAL_ETH_RX_COMPLETE_CB_ID:
+      heth->RxCpltCallback = HAL_ETH_RxCpltCallback;
+      break;
 
-      case HAL_ETH_ERROR_CB_ID :
-        heth->ErrorCallback = HAL_ETH_ErrorCallback;
-        break;
+    case HAL_ETH_ERROR_CB_ID:
+      heth->ErrorCallback = HAL_ETH_ErrorCallback;
+      break;
 
-      case HAL_ETH_PMT_CB_ID :
-        heth->PMTCallback = HAL_ETH_PMTCallback;
-        break;
+    case HAL_ETH_PMT_CB_ID:
+      heth->PMTCallback = HAL_ETH_PMTCallback;
+      break;
 
+    case HAL_ETH_WAKEUP_CB_ID:
+      heth->WakeUpCallback = HAL_ETH_WakeUpCallback;
+      break;
 
-      case HAL_ETH_WAKEUP_CB_ID :
-        heth->WakeUpCallback = HAL_ETH_WakeUpCallback;
-        break;
+    case HAL_ETH_MSPINIT_CB_ID:
+      heth->MspInitCallback = HAL_ETH_MspInit;
+      break;
 
-      case HAL_ETH_MSPINIT_CB_ID :
-        heth->MspInitCallback = HAL_ETH_MspInit;
-        break;
+    case HAL_ETH_MSPDEINIT_CB_ID:
+      heth->MspDeInitCallback = HAL_ETH_MspDeInit;
+      break;
 
-      case HAL_ETH_MSPDEINIT_CB_ID :
-        heth->MspDeInitCallback = HAL_ETH_MspDeInit;
-        break;
-
-      default :
-        /* Update the error code */
-        heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
-        /* Return error status */
-        status =  HAL_ERROR;
-        break;
+    default:
+      /* Update the error code */
+      heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
+      /* Return error status */
+      status = HAL_ERROR;
+      break;
     }
   }
   else if (heth->gState == HAL_ETH_STATE_RESET)
   {
     switch (CallbackID)
     {
-      case HAL_ETH_MSPINIT_CB_ID :
-        heth->MspInitCallback = HAL_ETH_MspInit;
-        break;
+    case HAL_ETH_MSPINIT_CB_ID:
+      heth->MspInitCallback = HAL_ETH_MspInit;
+      break;
 
-      case HAL_ETH_MSPDEINIT_CB_ID :
-        heth->MspDeInitCallback = HAL_ETH_MspDeInit;
-        break;
+    case HAL_ETH_MSPDEINIT_CB_ID:
+      heth->MspDeInitCallback = HAL_ETH_MspDeInit;
+      break;
 
-      default :
-        /* Update the error code */
-        heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
-        /* Return error status */
-        status =  HAL_ERROR;
-        break;
+    default:
+      /* Update the error code */
+      heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
+      /* Return error status */
+      status = HAL_ERROR;
+      break;
     }
   }
   else
@@ -662,7 +666,7 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_Ca
     /* Update the error code */
     heth->ErrorCode |= HAL_ETH_ERROR_INVALID_CALLBACK;
     /* Return error status */
-    status =  HAL_ERROR;
+    status = HAL_ERROR;
   }
 
   return status;
@@ -670,8 +674,8 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_Ca
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
 /**
-  * @}
-  */
+ * @}
+ */
 
 /** @defgroup ETH_Exported_Functions_Group2 IO operation functions
   *  @brief ETH Transmit and Receive functions
@@ -689,11 +693,11 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterCallback(ETH_HandleTypeDef *heth, HAL_ETH_Ca
   */
 
 /**
-  * @brief  Enables Ethernet MAC and DMA reception and transmission
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Enables Ethernet MAC and DMA reception and transmission
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_Start(ETH_HandleTypeDef *heth)
 {
   uint32_t tmpreg1;
@@ -746,11 +750,11 @@ HAL_StatusTypeDef HAL_ETH_Start(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Enables Ethernet MAC and DMA reception/transmission in Interrupt mode
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Enables Ethernet MAC and DMA reception/transmission in Interrupt mode
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
 {
   uint32_t tmpreg1;
@@ -765,12 +769,12 @@ HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
     SET_BIT(heth->Instance->MACIMR, ETH_MACIMR_TSTIM | ETH_MACIMR_PMTIM);
 
     /* Disable Rx MMC Interrupts */
-    SET_BIT(heth->Instance->MMCRIMR, ETH_MMCRIMR_RGUFM | ETH_MMCRIMR_RFAEM | \
-            ETH_MMCRIMR_RFCEM);
+    SET_BIT(heth->Instance->MMCRIMR, ETH_MMCRIMR_RGUFM | ETH_MMCRIMR_RFAEM |
+                                         ETH_MMCRIMR_RFCEM);
 
     /* Disable Tx MMC Interrupts */
-    SET_BIT(heth->Instance->MMCTIMR, ETH_MMCTIMR_TGFM | ETH_MMCTIMR_TGFMSCM | \
-            ETH_MMCTIMR_TGFSCM);
+    SET_BIT(heth->Instance->MMCTIMR, ETH_MMCTIMR_TGFM | ETH_MMCTIMR_TGFMSCM |
+                                         ETH_MMCTIMR_TGFSCM);
 
     /* Set nombre of descriptors to build */
     heth->RxDescList.RxBuildDescCnt = ETH_RX_DESC_CNT;
@@ -810,7 +814,7 @@ HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
     - Rx complete interrupt
     - Fatal bus interrupt
     */
-    __HAL_ETH_DMA_ENABLE_IT(heth, (ETH_DMAIER_NISE | ETH_DMAIER_RIE | ETH_DMAIER_TIE  |
+    __HAL_ETH_DMA_ENABLE_IT(heth, (ETH_DMAIER_NISE | ETH_DMAIER_RIE | ETH_DMAIER_TIE |
                                    ETH_DMAIER_FBEIE | ETH_DMAIER_AISE | ETH_DMAIER_RBUIE));
 
     heth->gState = HAL_ETH_STATE_STARTED;
@@ -823,11 +827,11 @@ HAL_StatusTypeDef HAL_ETH_Start_IT(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Stop Ethernet MAC and DMA reception/transmission
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Stop Ethernet MAC and DMA reception/transmission
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_Stop(ETH_HandleTypeDef *heth)
 {
   uint32_t tmpreg1;
@@ -875,11 +879,11 @@ HAL_StatusTypeDef HAL_ETH_Stop(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Stop Ethernet MAC and DMA reception/transmission in Interrupt mode
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Stop Ethernet MAC and DMA reception/transmission in Interrupt mode
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_Stop_IT(ETH_HandleTypeDef *heth)
 {
   ETH_DMADescTypeDef *dmarxdesc;
@@ -891,7 +895,7 @@ HAL_StatusTypeDef HAL_ETH_Stop_IT(ETH_HandleTypeDef *heth)
     /* Set the ETH peripheral state to BUSY */
     heth->gState = HAL_ETH_STATE_BUSY;
 
-    __HAL_ETH_DMA_DISABLE_IT(heth, (ETH_DMAIER_NISE | ETH_DMAIER_RIE | ETH_DMAIER_TIE  |
+    __HAL_ETH_DMA_DISABLE_IT(heth, (ETH_DMAIER_NISE | ETH_DMAIER_RIE | ETH_DMAIER_TIE |
                                     ETH_DMAIER_FBEIE | ETH_DMAIER_AISE | ETH_DMAIER_RBUIE));
 
     /* Disable the DMA transmission */
@@ -942,13 +946,13 @@ HAL_StatusTypeDef HAL_ETH_Stop_IT(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Sends an Ethernet Packet in polling mode.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pTxConfig: Hold the configuration of packet to be transmitted
-  * @param  Timeout: timeout value
-  * @retval HAL status
-  */
+ * @brief  Sends an Ethernet Packet in polling mode.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pTxConfig: Hold the configuration of packet to be transmitted
+ * @param  Timeout: timeout value
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_Transmit(ETH_HandleTypeDef *heth, ETH_TxPacketConfig *pTxConfig, uint32_t Timeout)
 {
   uint32_t tickstart;
@@ -1018,12 +1022,12 @@ HAL_StatusTypeDef HAL_ETH_Transmit(ETH_HandleTypeDef *heth, ETH_TxPacketConfig *
 }
 
 /**
-  * @brief  Sends an Ethernet Packet in interrupt mode.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pTxConfig: Hold the configuration of packet to be transmitted
-  * @retval HAL status
-  */
+ * @brief  Sends an Ethernet Packet in interrupt mode.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pTxConfig: Hold the configuration of packet to be transmitted
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_Transmit_IT(ETH_HandleTypeDef *heth, ETH_TxPacketConfig *pTxConfig)
 {
   if (pTxConfig == NULL)
@@ -1061,7 +1065,6 @@ HAL_StatusTypeDef HAL_ETH_Transmit_IT(ETH_HandleTypeDef *heth, ETH_TxPacketConfi
     }
 
     return HAL_OK;
-
   }
   else
   {
@@ -1070,12 +1073,12 @@ HAL_StatusTypeDef HAL_ETH_Transmit_IT(ETH_HandleTypeDef *heth, ETH_TxPacketConfi
 }
 
 /**
-  * @brief  Read a received packet.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pAppBuff: Pointer to an application buffer to receive the packet.
-  * @retval HAL status
-  */
+ * @brief  Read a received packet.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pAppBuff: Pointer to an application buffer to receive the packet.
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
 {
   uint32_t descidx;
@@ -1084,7 +1087,6 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
   uint32_t desccntmax;
   uint32_t bufflength;
   uint8_t rxdataready = 0U;
-
 
   if (pAppBuff == NULL)
   {
@@ -1102,15 +1104,14 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
   desccntmax = ETH_RX_DESC_CNT - heth->RxDescList.RxBuildDescCnt;
 
   /* Check if descriptor is not owned by DMA */
-  while ((READ_BIT(dmarxdesc->DESC0, ETH_DMARXDESC_OWN) == (uint32_t)RESET) && (desccnt < desccntmax)
-         && (rxdataready == 0U))
+  while ((READ_BIT(dmarxdesc->DESC0, ETH_DMARXDESC_OWN) == (uint32_t)RESET) && (desccnt < desccntmax) && (rxdataready == 0U))
   {
-    if (READ_BIT(dmarxdesc->DESC0,  ETH_DMARXDESC_LS)  != (uint32_t)RESET)
+    if (READ_BIT(dmarxdesc->DESC0, ETH_DMARXDESC_LS) != (uint32_t)RESET)
     {
       /* Get timestamp high */
       heth->RxDescList.TimeStamp.TimeStampHigh = dmarxdesc->DESC6;
       /* Get timestamp low */
-      heth->RxDescList.TimeStamp.TimeStampLow  = dmarxdesc->DESC7;
+      heth->RxDescList.TimeStamp.TimeStampLow = dmarxdesc->DESC7;
     }
     if ((READ_BIT(dmarxdesc->DESC0, ETH_DMARXDESC_FS) != (uint32_t)RESET) || (heth->RxDescList.pRxStart != NULL))
     {
@@ -1144,8 +1145,8 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
 #else
       /* Link callback */
       HAL_ETH_RxLinkCallback(&heth->RxDescList.pRxStart, &heth->RxDescList.pRxEnd,
-                             (uint8_t *)dmarxdesc->BackupAddr0, (uint16_t) bufflength);
-#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+                             (uint8_t *)dmarxdesc->BackupAddr0, (uint16_t)bufflength);
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
       heth->RxDescList.RxDescCnt++;
       heth->RxDescList.RxDataLength += bufflength;
 
@@ -1184,13 +1185,13 @@ HAL_StatusTypeDef HAL_ETH_ReadData(ETH_HandleTypeDef *heth, void **pAppBuff)
 }
 
 /**
-  * @brief  This function gives back Rx Desc of the last received Packet
-  *         to the DMA, so ETH DMA will be able to use these descriptors
-  *         to receive next Packets.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  This function gives back Rx Desc of the last received Packet
+ *         to the DMA, so ETH DMA will be able to use these descriptors
+ *         to receive next Packets.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth)
 {
   uint32_t descidx;
@@ -1215,7 +1216,7 @@ static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth)
 #else
       /* Allocate callback */
       HAL_ETH_RxAllocateCallback(&buff);
-#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
       if (buff == NULL)
       {
         allocStatus = 0U;
@@ -1265,12 +1266,12 @@ static void ETH_UpdateDescriptor(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Register the Rx alloc callback.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  rxAllocateCallback: pointer to function to alloc buffer
-  * @retval HAL status
-  */
+ * @brief  Register the Rx alloc callback.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  rxAllocateCallback: pointer to function to alloc buffer
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_RegisterRxAllocateCallback(ETH_HandleTypeDef *heth,
                                                      pETH_rxAllocateCallbackTypeDef rxAllocateCallback)
 {
@@ -1287,11 +1288,11 @@ HAL_StatusTypeDef HAL_ETH_RegisterRxAllocateCallback(ETH_HandleTypeDef *heth,
 }
 
 /**
-  * @brief  Unregister the Rx alloc callback.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Unregister the Rx alloc callback.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_UnRegisterRxAllocateCallback(ETH_HandleTypeDef *heth)
 {
   /* Set function to allocate buffer */
@@ -1301,10 +1302,10 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterRxAllocateCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Rx Allocate callback.
-  * @param  buff: pointer to allocated buffer
-  * @retval None
-  */
+ * @brief  Rx Allocate callback.
+ * @param  buff: pointer to allocated buffer
+ * @retval None
+ */
 __weak void HAL_ETH_RxAllocateCallback(uint8_t **buff)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -1315,13 +1316,13 @@ __weak void HAL_ETH_RxAllocateCallback(uint8_t **buff)
 }
 
 /**
-  * @brief  Rx Link callback.
-  * @param  pStart: pointer to packet start
-  * @param  pStart: pointer to packet end
-  * @param  buff: pointer to received data
-  * @param  Length: received data length
-  * @retval None
-  */
+ * @brief  Rx Link callback.
+ * @param  pStart: pointer to packet start
+ * @param  pStart: pointer to packet end
+ * @param  buff: pointer to received data
+ * @param  Length: received data length
+ * @retval None
+ */
 __weak void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t Length)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -1335,12 +1336,12 @@ __weak void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, ui
 }
 
 /**
-  * @brief  Set the Rx link data function.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  rxLinkCallback: pointer to function to link data
-  * @retval HAL status
-  */
+ * @brief  Set the Rx link data function.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  rxLinkCallback: pointer to function to link data
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_RegisterRxLinkCallback(ETH_HandleTypeDef *heth, pETH_rxLinkCallbackTypeDef rxLinkCallback)
 {
   if (rxLinkCallback == NULL)
@@ -1356,11 +1357,11 @@ HAL_StatusTypeDef HAL_ETH_RegisterRxLinkCallback(ETH_HandleTypeDef *heth, pETH_r
 }
 
 /**
-  * @brief  Unregister the Rx link callback.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Unregister the Rx link callback.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_UnRegisterRxLinkCallback(ETH_HandleTypeDef *heth)
 {
   /* Set function to allocate buffer */
@@ -1370,12 +1371,12 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterRxLinkCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Get the error state of the last received packet.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pErrorCode: pointer to uint32_t to hold the error code
-  * @retval HAL status
-  */
+ * @brief  Get the error state of the last received packet.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pErrorCode: pointer to uint32_t to hold the error code
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_GetRxDataErrorCode(ETH_HandleTypeDef *heth, uint32_t *pErrorCode)
 {
   /* Get error bits. */
@@ -1385,12 +1386,12 @@ HAL_StatusTypeDef HAL_ETH_GetRxDataErrorCode(ETH_HandleTypeDef *heth, uint32_t *
 }
 
 /**
-  * @brief  Set the Tx free function.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  txFreeCallback: pointer to function to release the packet
-  * @retval HAL status
-  */
+ * @brief  Set the Tx free function.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  txFreeCallback: pointer to function to release the packet
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_RegisterTxFreeCallback(ETH_HandleTypeDef *heth, pETH_txFreeCallbackTypeDef txFreeCallback)
 {
   if (txFreeCallback == NULL)
@@ -1406,11 +1407,11 @@ HAL_StatusTypeDef HAL_ETH_RegisterTxFreeCallback(ETH_HandleTypeDef *heth, pETH_t
 }
 
 /**
-  * @brief  Unregister the Tx free callback.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Unregister the Tx free callback.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_UnRegisterTxFreeCallback(ETH_HandleTypeDef *heth)
 {
   /* Set function to allocate buffer */
@@ -1420,10 +1421,10 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterTxFreeCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Tx Free callback.
-  * @param  buff: pointer to buffer to free
-  * @retval None
-  */
+ * @brief  Tx Free callback.
+ * @param  buff: pointer to buffer to free
+ * @retval None
+ */
 __weak void HAL_ETH_TxFreeCallback(uint32_t *buff)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -1434,16 +1435,16 @@ __weak void HAL_ETH_TxFreeCallback(uint32_t *buff)
 }
 
 /**
-  * @brief  Release transmitted Tx packets.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Release transmitted Tx packets.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_ReleaseTxPacket(ETH_HandleTypeDef *heth)
 {
   ETH_TxDescListTypeDef *dmatxdesclist = &heth->TxDescList;
-  uint32_t numOfBuf =  dmatxdesclist->BuffersInUse;
-  uint32_t idx =       dmatxdesclist->releaseIndex;
+  uint32_t numOfBuf = dmatxdesclist->BuffersInUse;
+  uint32_t idx = dmatxdesclist->releaseIndex;
   uint8_t pktTxStatus = 1U;
   uint8_t pktInUse;
 #ifdef HAL_ETH_USE_PTP
@@ -1480,7 +1481,7 @@ HAL_StatusTypeDef HAL_ETH_ReleaseTxPacket(ETH_HandleTypeDef *heth)
 #ifdef HAL_ETH_USE_PTP
         /* Handle Ptp  */
         heth->txPtpCallback(dmatxdesclist->PacketAddress[idx], timestamp);
-#endif  /* HAL_ETH_USE_PTP */
+#endif /* HAL_ETH_USE_PTP */
         /* Release the packet.  */
         heth->txFreeCallback(dmatxdesclist->PacketAddress[idx]);
 #else
@@ -1488,10 +1489,10 @@ HAL_StatusTypeDef HAL_ETH_ReleaseTxPacket(ETH_HandleTypeDef *heth)
 #ifdef HAL_ETH_USE_PTP
         /* Handle Ptp  */
         HAL_ETH_TxPtpCallback(dmatxdesclist->PacketAddress[idx], timestamp);
-#endif  /* HAL_ETH_USE_PTP */
+#endif /* HAL_ETH_USE_PTP */
         /* Release the packet.  */
         HAL_ETH_TxFreeCallback(dmatxdesclist->PacketAddress[idx]);
-#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
         /* Clear the entry in the in-use array.  */
         dmatxdesclist->PacketAddress[idx] = NULL;
@@ -1513,13 +1514,13 @@ HAL_StatusTypeDef HAL_ETH_ReleaseTxPacket(ETH_HandleTypeDef *heth)
 
 #ifdef HAL_ETH_USE_PTP
 /**
-  * @brief  Set the Ethernet PTP configuration.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  ptpconfig: pointer to a ETH_PTP_ConfigTypeDef structure that contains
-  *         the configuration information for PTP
-  * @retval HAL status
-  */
+ * @brief  Set the Ethernet PTP configuration.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  ptpconfig: pointer to a ETH_PTP_ConfigTypeDef structure that contains
+ *         the configuration information for PTP
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_SetConfig(ETH_HandleTypeDef *heth, ETH_PTP_ConfigTypeDef *ptpconfig)
 {
   uint32_t tmpTSCR;
@@ -1555,7 +1556,9 @@ HAL_StatusTypeDef HAL_ETH_PTP_SetConfig(ETH_HandleTypeDef *heth, ETH_PTP_ConfigT
   if (ptpconfig->TimestampAddendUpdate == ENABLE)
   {
     SET_BIT(heth->Instance->PTPTSCR, ETH_PTPTSCR_TSARU);
-    while ((heth->Instance->PTPTSCR & ETH_PTPTSCR_TSARU) != 0) {}
+    while ((heth->Instance->PTPTSCR & ETH_PTPTSCR_TSARU) != 0)
+    {
+    }
   }
 
   /* Enable Update mode */
@@ -1580,13 +1583,13 @@ HAL_StatusTypeDef HAL_ETH_PTP_SetConfig(ETH_HandleTypeDef *heth, ETH_PTP_ConfigT
 }
 
 /**
-  * @brief  Get the Ethernet PTP configuration.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  ptpconfig: pointer to a ETH_PTP_ConfigTypeDef structure that contains
-  *         the configuration information for PTP
-  * @retval HAL status
-  */
+ * @brief  Get the Ethernet PTP configuration.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  ptpconfig: pointer to a ETH_PTP_ConfigTypeDef structure that contains
+ *         the configuration information for PTP
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_GetConfig(ETH_HandleTypeDef *heth, ETH_PTP_ConfigTypeDef *ptpconfig)
 {
   if (ptpconfig == NULL)
@@ -1595,42 +1598,73 @@ HAL_StatusTypeDef HAL_ETH_PTP_GetConfig(ETH_HandleTypeDef *heth, ETH_PTP_ConfigT
   }
   ptpconfig->Timestamp = READ_BIT(heth->Instance->PTPTSCR, ETH_PTPTSCR_TSE);
   ptpconfig->TimestampUpdate = ((READ_BIT(heth->Instance->PTPTSCR,
-                                          ETH_PTPTSCR_TSFCU) >> ETH_PTPTSCR_TSFCU_Pos) > 0U) ? ENABLE : DISABLE;
+                                          ETH_PTPTSCR_TSFCU) >>
+                                 ETH_PTPTSCR_TSFCU_Pos) > 0U)
+                                   ? ENABLE
+                                   : DISABLE;
   ptpconfig->TimestampAll = ((READ_BIT(heth->Instance->PTPTSCR,
-                                       ETH_PTPTSCR_TSSARFE) >> ETH_PTPTSCR_TSSARFE_Pos) > 0U) ? ENABLE : DISABLE;
+                                       ETH_PTPTSCR_TSSARFE) >>
+                              ETH_PTPTSCR_TSSARFE_Pos) > 0U)
+                                ? ENABLE
+                                : DISABLE;
   ptpconfig->TimestampRolloverMode = ((READ_BIT(heth->Instance->PTPTSCR,
-                                                ETH_PTPTSCR_TSSSR) >> ETH_PTPTSCR_TSSSR_Pos) > 0U)
-                                     ? ENABLE : DISABLE;
+                                                ETH_PTPTSCR_TSSSR) >>
+                                       ETH_PTPTSCR_TSSSR_Pos) > 0U)
+                                         ? ENABLE
+                                         : DISABLE;
   ptpconfig->TimestampV2 = ((READ_BIT(heth->Instance->PTPTSCR,
-                                      ETH_PTPTSCR_TSPTPPSV2E) >> ETH_PTPTSCR_TSPTPPSV2E_Pos) > 0U) ? ENABLE : DISABLE;
+                                      ETH_PTPTSCR_TSPTPPSV2E) >>
+                             ETH_PTPTSCR_TSPTPPSV2E_Pos) > 0U)
+                               ? ENABLE
+                               : DISABLE;
   ptpconfig->TimestampEthernet = ((READ_BIT(heth->Instance->PTPTSCR,
-                                            ETH_PTPTSCR_TSSPTPOEFE) >> ETH_PTPTSCR_TSSPTPOEFE_Pos) > 0U)
-                                 ? ENABLE : DISABLE;
+                                            ETH_PTPTSCR_TSSPTPOEFE) >>
+                                   ETH_PTPTSCR_TSSPTPOEFE_Pos) > 0U)
+                                     ? ENABLE
+                                     : DISABLE;
   ptpconfig->TimestampIPv6 = ((READ_BIT(heth->Instance->PTPTSCR,
-                                        ETH_PTPTSCR_TSSIPV6FE) >> ETH_PTPTSCR_TSSIPV6FE_Pos) > 0U) ? ENABLE : DISABLE;
+                                        ETH_PTPTSCR_TSSIPV6FE) >>
+                               ETH_PTPTSCR_TSSIPV6FE_Pos) > 0U)
+                                 ? ENABLE
+                                 : DISABLE;
   ptpconfig->TimestampIPv4 = ((READ_BIT(heth->Instance->PTPTSCR,
-                                        ETH_PTPTSCR_TSSIPV4FE) >> ETH_PTPTSCR_TSSIPV4FE_Pos) > 0U) ? ENABLE : DISABLE;
+                                        ETH_PTPTSCR_TSSIPV4FE) >>
+                               ETH_PTPTSCR_TSSIPV4FE_Pos) > 0U)
+                                 ? ENABLE
+                                 : DISABLE;
   ptpconfig->TimestampEvent = ((READ_BIT(heth->Instance->PTPTSCR,
-                                         ETH_PTPTSCR_TSSEME) >> ETH_PTPTSCR_TSSEME_Pos) > 0U) ? ENABLE : DISABLE;
+                                         ETH_PTPTSCR_TSSEME) >>
+                                ETH_PTPTSCR_TSSEME_Pos) > 0U)
+                                  ? ENABLE
+                                  : DISABLE;
   ptpconfig->TimestampMaster = ((READ_BIT(heth->Instance->PTPTSCR,
-                                          ETH_PTPTSCR_TSSMRME) >> ETH_PTPTSCR_TSSMRME_Pos) > 0U) ? ENABLE : DISABLE;
+                                          ETH_PTPTSCR_TSSMRME) >>
+                                 ETH_PTPTSCR_TSSMRME_Pos) > 0U)
+                                   ? ENABLE
+                                   : DISABLE;
   ptpconfig->TimestampFilter = ((READ_BIT(heth->Instance->PTPTSCR,
-                                          ETH_PTPTSCR_TSPFFMAE) >> ETH_PTPTSCR_TSPFFMAE_Pos) > 0U) ? ENABLE : DISABLE;
+                                          ETH_PTPTSCR_TSPFFMAE) >>
+                                 ETH_PTPTSCR_TSPFFMAE_Pos) > 0U)
+                                   ? ENABLE
+                                   : DISABLE;
   ptpconfig->TimestampClockType = ((READ_BIT(heth->Instance->PTPTSCR,
-                                             ETH_PTPTSCR_TSCNT) >> ETH_PTPTSCR_TSCNT_Pos) > 0U) ? ENABLE : DISABLE;
+                                             ETH_PTPTSCR_TSCNT) >>
+                                    ETH_PTPTSCR_TSCNT_Pos) > 0U)
+                                      ? ENABLE
+                                      : DISABLE;
 
   /* Return function status */
   return HAL_OK;
 }
 
 /**
-  * @brief  Set Seconds and Nanoseconds for the Ethernet PTP registers.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  heth: pointer to a ETH_TimeTypeDef structure that contains
-  *         time to set
-  * @retval HAL status
-  */
+ * @brief  Set Seconds and Nanoseconds for the Ethernet PTP registers.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  heth: pointer to a ETH_TimeTypeDef structure that contains
+ *         time to set
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_SetTime(ETH_HandleTypeDef *heth, ETH_TimeTypeDef *time)
 {
   if (heth->IsPtpConfigured == HAL_ETH_PTP_CONFIGURATED)
@@ -1652,13 +1686,13 @@ HAL_StatusTypeDef HAL_ETH_PTP_SetTime(ETH_HandleTypeDef *heth, ETH_TimeTypeDef *
 }
 
 /**
-  * @brief  Get Seconds and Nanoseconds for the Ethernet PTP registers.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  heth: pointer to a ETH_TimeTypeDef structure that contains
-  *         time to get
-  * @retval HAL status
-  */
+ * @brief  Get Seconds and Nanoseconds for the Ethernet PTP registers.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  heth: pointer to a ETH_TimeTypeDef structure that contains
+ *         time to get
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_GetTime(ETH_HandleTypeDef *heth, ETH_TimeTypeDef *time)
 {
   if (heth->IsPtpConfigured == HAL_ETH_PTP_CONFIGURATED)
@@ -1680,19 +1714,19 @@ HAL_StatusTypeDef HAL_ETH_PTP_GetTime(ETH_HandleTypeDef *heth, ETH_TimeTypeDef *
 }
 
 /**
-  * @brief  Update time for the Ethernet PTP registers.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  timeupdate: pointer to a ETH_TIMEUPDATETypeDef structure that contains
-  *         the time update information
-  * @retval HAL status
-  */
+ * @brief  Update time for the Ethernet PTP registers.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  timeupdate: pointer to a ETH_TIMEUPDATETypeDef structure that contains
+ *         the time update information
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_AddTimeOffset(ETH_HandleTypeDef *heth, ETH_PtpUpdateTypeDef ptpoffsettype,
                                             ETH_TimeTypeDef *timeoffset)
 {
   if (heth->IsPtpConfigured == HAL_ETH_PTP_CONFIGURATED)
   {
-    if (ptpoffsettype ==  HAL_ETH_PTP_NEGATIVE_UPDATE)
+    if (ptpoffsettype == HAL_ETH_PTP_NEGATIVE_UPDATE)
     {
       /* Set Seconds update */
       heth->Instance->PTPTSHUR = ETH_PTPTSHR_VALUE - timeoffset->Seconds + 1U;
@@ -1726,12 +1760,12 @@ HAL_StatusTypeDef HAL_ETH_PTP_AddTimeOffset(ETH_HandleTypeDef *heth, ETH_PtpUpda
 }
 
 /**
-  * @brief  Insert Timestamp in transmission.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  txtimestampconf: Enable or Disable timestamp in transmission
-  * @retval HAL status
-  */
+ * @brief  Insert Timestamp in transmission.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  txtimestampconf: Enable or Disable timestamp in transmission
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_InsertTxTimestamp(ETH_HandleTypeDef *heth)
 {
   ETH_TxDescListTypeDef *dmatxdesclist = &heth->TxDescList;
@@ -1754,17 +1788,17 @@ HAL_StatusTypeDef HAL_ETH_PTP_InsertTxTimestamp(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Get transmission timestamp.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  timestamp: pointer to ETH_TIMESTAMPTypeDef structure that contains
-  *         transmission timestamp
-  * @retval HAL status
-  */
+ * @brief  Get transmission timestamp.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  timestamp: pointer to ETH_TIMESTAMPTypeDef structure that contains
+ *         transmission timestamp
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_GetTxTimestamp(ETH_HandleTypeDef *heth, ETH_TimeStampTypeDef *timestamp)
 {
   ETH_TxDescListTypeDef *dmatxdesclist = &heth->TxDescList;
-  uint32_t idx =       dmatxdesclist->releaseIndex;
+  uint32_t idx = dmatxdesclist->releaseIndex;
   ETH_DMADescTypeDef *dmatxdesc = (ETH_DMADescTypeDef *)dmatxdesclist->TxDesc[idx];
 
   if (heth->IsPtpConfigured == HAL_ETH_PTP_CONFIGURATED)
@@ -1785,13 +1819,13 @@ HAL_StatusTypeDef HAL_ETH_PTP_GetTxTimestamp(ETH_HandleTypeDef *heth, ETH_TimeSt
 }
 
 /**
-  * @brief  Get receive timestamp.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  timestamp: pointer to ETH_TIMESTAMPTypeDef structure that contains
-  *         receive timestamp
-  * @retval HAL status
-  */
+ * @brief  Get receive timestamp.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  timestamp: pointer to ETH_TIMESTAMPTypeDef structure that contains
+ *         receive timestamp
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_PTP_GetRxTimestamp(ETH_HandleTypeDef *heth, ETH_TimeStampTypeDef *timestamp)
 {
   if (heth->IsPtpConfigured == HAL_ETH_PTP_CONFIGURATED)
@@ -1812,12 +1846,12 @@ HAL_StatusTypeDef HAL_ETH_PTP_GetRxTimestamp(ETH_HandleTypeDef *heth, ETH_TimeSt
 }
 
 /**
-  * @brief  Register the Tx Ptp callback.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  txPtpCallback: Function to handle Ptp transmission
-  * @retval HAL status
-  */
+ * @brief  Register the Tx Ptp callback.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  txPtpCallback: Function to handle Ptp transmission
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_RegisterTxPtpCallback(ETH_HandleTypeDef *heth, pETH_txPtpCallbackTypeDef txPtpCallback)
 {
   if (txPtpCallback == NULL)
@@ -1832,11 +1866,11 @@ HAL_StatusTypeDef HAL_ETH_RegisterTxPtpCallback(ETH_HandleTypeDef *heth, pETH_tx
 }
 
 /**
-  * @brief  Unregister the Tx Ptp callback.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Unregister the Tx Ptp callback.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_UnRegisterTxPtpCallback(ETH_HandleTypeDef *heth)
 {
   /* Set function to allocate buffer */
@@ -1846,10 +1880,10 @@ HAL_StatusTypeDef HAL_ETH_UnRegisterTxPtpCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Tx Ptp callback.
-  * @param  buff: pointer to application buffer
-  * @retval None
-  */
+ * @brief  Tx Ptp callback.
+ * @param  buff: pointer to application buffer
+ * @retval None
+ */
 __weak void HAL_ETH_TxPtpCallback(uint32_t *buff, ETH_TimeStampTypeDef *timestamp)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -1858,14 +1892,14 @@ __weak void HAL_ETH_TxPtpCallback(uint32_t *buff, ETH_TimeStampTypeDef *timestam
   the HAL_ETH_TxPtpCallback could be implemented in the user file
   */
 }
-#endif  /* HAL_ETH_USE_PTP */
+#endif /* HAL_ETH_USE_PTP */
 
 /**
-  * @brief  This function handles ETH interrupt request.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  This function handles ETH interrupt request.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
 {
   /* Packet received */
@@ -1882,7 +1916,7 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
 #else
       /* Receive complete callback */
       HAL_ETH_RxCpltCallback(heth);
-#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
     }
   }
 
@@ -1900,10 +1934,9 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
 #else
       /* Transfer complete callback */
       HAL_ETH_TxCpltCallback(heth);
-#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
     }
   }
-
 
   /* ETH DMA Error */
   if (__HAL_ETH_DMA_GET_IT(heth, ETH_DMASR_AIS))
@@ -1940,11 +1973,9 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
 #else
       /* Ethernet DMA Error callback */
       HAL_ETH_ErrorCallback(heth);
-#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
-
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
     }
   }
-
 
   /* ETH PMT IT */
   if (__HAL_ETH_MAC_GET_IT(heth, ETH_MAC_PMT_IT))
@@ -1958,11 +1989,10 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
 #else
     /* Ethernet PMT callback */
     HAL_ETH_PMTCallback(heth);
-#endif  /* USE_HAL_ETH_REGISTER_CALLBACKS */
+#endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
     heth->MACWakeUpEvent = (uint32_t)(0x0U);
   }
-
 
   /* check ETH WAKEUP exti flag */
   if (__HAL_ETH_WAKEUP_EXTI_GET_FLAG(ETH_WAKEUP_EXTI_LINE) != (uint32_t)RESET)
@@ -1980,11 +2010,11 @@ void HAL_ETH_IRQHandler(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Tx Transfer completed callbacks.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Tx Transfer completed callbacks.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 __weak void HAL_ETH_TxCpltCallback(ETH_HandleTypeDef *heth)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -1995,11 +2025,11 @@ __weak void HAL_ETH_TxCpltCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Rx Transfer completed callbacks.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Rx Transfer completed callbacks.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 __weak void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -2010,11 +2040,11 @@ __weak void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Ethernet transfer error callbacks
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Ethernet transfer error callbacks
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 __weak void HAL_ETH_ErrorCallback(ETH_HandleTypeDef *heth)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -2025,11 +2055,11 @@ __weak void HAL_ETH_ErrorCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Ethernet Power Management module IT callback
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Ethernet Power Management module IT callback
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 __weak void HAL_ETH_PMTCallback(ETH_HandleTypeDef *heth)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -2039,13 +2069,12 @@ __weak void HAL_ETH_PMTCallback(ETH_HandleTypeDef *heth)
   */
 }
 
-
 /**
-  * @brief  ETH WAKEUP interrupt callback
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  ETH WAKEUP interrupt callback
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 __weak void HAL_ETH_WakeUpCallback(ETH_HandleTypeDef *heth)
 {
   /* Prevent unused argument(s) compilation warning */
@@ -2056,14 +2085,14 @@ __weak void HAL_ETH_WakeUpCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Read a PHY register
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  PHYAddr: PHY port address, must be a value from 0 to 31
-  * @param  PHYReg: PHY register address, must be a value from 0 to 31
-  * @param pRegValue: parameter to hold read value
-  * @retval HAL status
-  */
+ * @brief  Read a PHY register
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  PHYAddr: PHY port address, must be a value from 0 to 31
+ * @param  PHYReg: PHY register address, must be a value from 0 to 31
+ * @param pRegValue: parameter to hold read value
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_ReadPHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYAddr, uint32_t PHYReg,
                                           uint32_t *pRegValue)
 {
@@ -2077,14 +2106,13 @@ HAL_StatusTypeDef HAL_ETH_ReadPHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYA
   tmpreg1 &= ~ETH_MACMIIAR_CR_MASK;
 
   /* Prepare the MII address register value */
-  tmpreg1 |= ((PHYAddr << 11U) & ETH_MACMIIAR_PA);                        /* Set the PHY device address   */
-  tmpreg1 |= (((uint32_t)PHYReg << 6U) & ETH_MACMIIAR_MR);                /* Set the PHY register address */
-  tmpreg1 &= ~ETH_MACMIIAR_MW;                                            /* Set the read mode            */
-  tmpreg1 |= ETH_MACMIIAR_MB;                                             /* Set the MII Busy bit         */
+  tmpreg1 |= ((PHYAddr << 11U) & ETH_MACMIIAR_PA);         /* Set the PHY device address   */
+  tmpreg1 |= (((uint32_t)PHYReg << 6U) & ETH_MACMIIAR_MR); /* Set the PHY register address */
+  tmpreg1 &= ~ETH_MACMIIAR_MW;                             /* Set the read mode            */
+  tmpreg1 |= ETH_MACMIIAR_MB;                              /* Set the MII Busy bit         */
 
   /* Write the result value into the MII Address register */
   heth->Instance->MACMIIAR = tmpreg1;
-
 
   tickstart = HAL_GetTick();
 
@@ -2106,16 +2134,15 @@ HAL_StatusTypeDef HAL_ETH_ReadPHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYA
   return HAL_OK;
 }
 
-
 /**
-  * @brief  Writes to a PHY register.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  PHYAddr: PHY port address, must be a value from 0 to 31
-  * @param  PHYReg: PHY register address, must be a value from 0 to 31
-  * @param  RegValue: the value to write
-  * @retval HAL status
-  */
+ * @brief  Writes to a PHY register.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  PHYAddr: PHY port address, must be a value from 0 to 31
+ * @param  PHYReg: PHY register address, must be a value from 0 to 31
+ * @param  RegValue: the value to write
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_WritePHYRegister(ETH_HandleTypeDef *heth, uint32_t PHYAddr, uint32_t PHYReg,
                                            uint32_t RegValue)
 {
@@ -2129,10 +2156,10 @@ HAL_StatusTypeDef HAL_ETH_WritePHYRegister(ETH_HandleTypeDef *heth, uint32_t PHY
   tmpreg1 &= ~ETH_MACMIIAR_CR_MASK;
 
   /* Prepare the MII register address value */
-  tmpreg1 |= ((PHYAddr << 11U) & ETH_MACMIIAR_PA);                      /* Set the PHY device address */
-  tmpreg1 |= (((uint32_t)PHYReg << 6U) & ETH_MACMIIAR_MR);              /* Set the PHY register address */
-  tmpreg1 |= ETH_MACMIIAR_MW;                                           /* Set the write mode */
-  tmpreg1 |= ETH_MACMIIAR_MB;                                           /* Set the MII Busy bit */
+  tmpreg1 |= ((PHYAddr << 11U) & ETH_MACMIIAR_PA);         /* Set the PHY device address */
+  tmpreg1 |= (((uint32_t)PHYReg << 6U) & ETH_MACMIIAR_MR); /* Set the PHY register address */
+  tmpreg1 |= ETH_MACMIIAR_MW;                              /* Set the write mode */
+  tmpreg1 |= ETH_MACMIIAR_MB;                              /* Set the MII Busy bit */
 
   /* Give the value to the MII data register */
   heth->Instance->MACMIIDR = (uint16_t)RegValue;
@@ -2159,8 +2186,8 @@ HAL_StatusTypeDef HAL_ETH_WritePHYRegister(ETH_HandleTypeDef *heth, uint32_t PHY
 }
 
 /**
-  * @}
-  */
+ * @}
+ */
 
 /** @defgroup ETH_Exported_Functions_Group3 Peripheral Control functions
   *  @brief   ETH control functions
@@ -2177,13 +2204,13 @@ HAL_StatusTypeDef HAL_ETH_WritePHYRegister(ETH_HandleTypeDef *heth, uint32_t PHY
   * @{
   */
 /**
-  * @brief  Get the configuration of the MAC and MTL subsystems.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  macconf: pointer to a ETH_MACConfigTypeDef structure that will hold
-  *         the configuration of the MAC.
-  * @retval HAL Status
-  */
+ * @brief  Get the configuration of the MAC and MTL subsystems.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  macconf: pointer to a ETH_MACConfigTypeDef structure that will hold
+ *         the configuration of the MAC.
+ * @retval HAL Status
+ */
 HAL_StatusTypeDef HAL_ETH_GetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTypeDef *macconf)
 {
   if (macconf == NULL)
@@ -2196,7 +2223,8 @@ HAL_StatusTypeDef HAL_ETH_GetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTyp
   macconf->BackOffLimit = READ_BIT(heth->Instance->MACCR, ETH_MACCR_BL);
   macconf->RetryTransmission = ((READ_BIT(heth->Instance->MACCR, ETH_MACCR_RD) >> 9) == 0U) ? ENABLE : DISABLE;
   macconf->CarrierSenseDuringTransmit = ((READ_BIT(heth->Instance->MACCR, ETH_MACCR_CSD) >> 16) > 0U)
-                                        ? ENABLE : DISABLE;
+                                            ? ENABLE
+                                            : DISABLE;
   macconf->ReceiveOwn = ((READ_BIT(heth->Instance->MACCR, ETH_MACCR_ROD) >> 13) == 0U) ? ENABLE : DISABLE;
   macconf->LoopbackMode = ((READ_BIT(heth->Instance->MACCR, ETH_MACCR_LM) >> 12) > 0U) ? ENABLE : DISABLE;
   macconf->DuplexMode = READ_BIT(heth->Instance->MACCR, ETH_MACCR_DM);
@@ -2207,26 +2235,26 @@ HAL_StatusTypeDef HAL_ETH_GetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTyp
   macconf->InterPacketGapVal = READ_BIT(heth->Instance->MACCR, ETH_MACCR_IFG);
   macconf->ChecksumOffload = ((READ_BIT(heth->Instance->MACCR, ETH_MACCR_IPCO) >> 10U) > 0U) ? ENABLE : DISABLE;
 
-
   macconf->TransmitFlowControl = ((READ_BIT(heth->Instance->MACFCR, ETH_MACFCR_TFCE) >> 1) > 0U) ? ENABLE : DISABLE;
   macconf->ZeroQuantaPause = ((READ_BIT(heth->Instance->MACFCR, ETH_MACFCR_ZQPD) >> 7) == 0U) ? ENABLE : DISABLE;
   macconf->PauseLowThreshold = READ_BIT(heth->Instance->MACFCR, ETH_MACFCR_PLT);
   macconf->PauseTime = (READ_BIT(heth->Instance->MACFCR, ETH_MACFCR_PT) >> 16);
   macconf->ReceiveFlowControl = ((READ_BIT(heth->Instance->MACFCR, ETH_MACFCR_RFCE) >> 2U) > 0U) ? ENABLE : DISABLE;
   macconf->UnicastPausePacketDetect = ((READ_BIT(heth->Instance->MACFCR, ETH_MACFCR_UPFD) >> 3U) > 0U)
-                                      ? ENABLE : DISABLE;
+                                          ? ENABLE
+                                          : DISABLE;
 
   return HAL_OK;
 }
 
 /**
-  * @brief  Get the configuration of the DMA.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  dmaconf: pointer to a ETH_DMAConfigTypeDef structure that will hold
-  *         the configuration of the ETH DMA.
-  * @retval HAL Status
-  */
+ * @brief  Get the configuration of the DMA.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  dmaconf: pointer to a ETH_DMAConfigTypeDef structure that will hold
+ *         the configuration of the ETH DMA.
+ * @retval HAL Status
+ */
 HAL_StatusTypeDef HAL_ETH_GetDMAConfig(ETH_HandleTypeDef *heth, ETH_DMAConfigTypeDef *dmaconf)
 {
   if (dmaconf == NULL)
@@ -2235,7 +2263,7 @@ HAL_StatusTypeDef HAL_ETH_GetDMAConfig(ETH_HandleTypeDef *heth, ETH_DMAConfigTyp
   }
 
   dmaconf->DMAArbitration = READ_BIT(heth->Instance->DMABMR,
-                                    (ETH_DMAARBITRATION_RXPRIORTX | ETH_DMAARBITRATION_ROUNDROBIN_RXTX_4_1));
+                                     (ETH_DMAARBITRATION_RXPRIORTX | ETH_DMAARBITRATION_ROUNDROBIN_RXTX_4_1));
   dmaconf->AddressAlignedBeats = ((READ_BIT(heth->Instance->DMABMR, ETH_DMABMR_AAB) >> 25U) > 0U) ? ENABLE : DISABLE;
   dmaconf->BurstMode = READ_BIT(heth->Instance->DMABMR, ETH_DMABMR_FB | ETH_DMABMR_MB);
   dmaconf->RxDMABurstLength = READ_BIT(heth->Instance->DMABMR, ETH_DMABMR_RDP);
@@ -2244,28 +2272,34 @@ HAL_StatusTypeDef HAL_ETH_GetDMAConfig(ETH_HandleTypeDef *heth, ETH_DMAConfigTyp
   dmaconf->DescriptorSkipLength = READ_BIT(heth->Instance->DMABMR, ETH_DMABMR_DSL) >> 2;
 
   dmaconf->DropTCPIPChecksumErrorFrame = ((READ_BIT(heth->Instance->DMAOMR,
-                                                    ETH_DMAOMR_DTCEFD) >> 26) > 0U) ? DISABLE : ENABLE;
+                                                    ETH_DMAOMR_DTCEFD) >>
+                                           26) > 0U)
+                                             ? DISABLE
+                                             : ENABLE;
   dmaconf->ReceiveStoreForward = ((READ_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_RSF) >> 25) > 0U) ? ENABLE : DISABLE;
   dmaconf->FlushRxPacket = ((READ_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_FTF) >> 20) > 0U) ? DISABLE : ENABLE;
   dmaconf->TransmitStoreForward = ((READ_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_TSF) >> 21) > 0U) ? ENABLE : DISABLE;
   dmaconf->TransmitThresholdControl = READ_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_TTC);
   dmaconf->ForwardErrorFrames = ((READ_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_FEF) >> 7) > 0U) ? ENABLE : DISABLE;
   dmaconf->ForwardUndersizedGoodFrames = ((READ_BIT(heth->Instance->DMAOMR,
-                                                    ETH_DMAOMR_FUGF) >> 6) > 0U) ? ENABLE : DISABLE;
+                                                    ETH_DMAOMR_FUGF) >>
+                                           6) > 0U)
+                                             ? ENABLE
+                                             : DISABLE;
   dmaconf->ReceiveThresholdControl = READ_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_RTC);
   dmaconf->SecondFrameOperate = ((READ_BIT(heth->Instance->DMAOMR, ETH_DMAOMR_OSF) >> 2) > 0U) ? ENABLE : DISABLE;
   return HAL_OK;
 }
 
 /**
-  * @brief  Set the MAC configuration.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  macconf: pointer to a ETH_MACConfigTypeDef structure that contains
-  *         the configuration of the MAC.
-  * @retval HAL status
-  */
-HAL_StatusTypeDef HAL_ETH_SetMACConfig(ETH_HandleTypeDef *heth,  ETH_MACConfigTypeDef *macconf)
+ * @brief  Set the MAC configuration.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  macconf: pointer to a ETH_MACConfigTypeDef structure that contains
+ *         the configuration of the MAC.
+ * @retval HAL status
+ */
+HAL_StatusTypeDef HAL_ETH_SetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTypeDef *macconf)
 {
   if (macconf == NULL)
   {
@@ -2285,14 +2319,14 @@ HAL_StatusTypeDef HAL_ETH_SetMACConfig(ETH_HandleTypeDef *heth,  ETH_MACConfigTy
 }
 
 /**
-  * @brief  Set the ETH DMA configuration.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  dmaconf: pointer to a ETH_DMAConfigTypeDef structure that will hold
-  *         the configuration of the ETH DMA.
-  * @retval HAL status
-  */
-HAL_StatusTypeDef HAL_ETH_SetDMAConfig(ETH_HandleTypeDef *heth,  ETH_DMAConfigTypeDef *dmaconf)
+ * @brief  Set the ETH DMA configuration.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  dmaconf: pointer to a ETH_DMAConfigTypeDef structure that will hold
+ *         the configuration of the ETH DMA.
+ * @retval HAL status
+ */
+HAL_StatusTypeDef HAL_ETH_SetDMAConfig(ETH_HandleTypeDef *heth, ETH_DMAConfigTypeDef *dmaconf)
 {
   if (dmaconf == NULL)
   {
@@ -2312,11 +2346,11 @@ HAL_StatusTypeDef HAL_ETH_SetDMAConfig(ETH_HandleTypeDef *heth,  ETH_DMAConfigTy
 }
 
 /**
-  * @brief  Configures the Clock range of ETH MDIO interface.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Configures the Clock range of ETH MDIO interface.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 void HAL_ETH_SetMDIOClockRange(ETH_HandleTypeDef *heth)
 {
   uint32_t hclk;
@@ -2362,13 +2396,13 @@ void HAL_ETH_SetMDIOClockRange(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Set the ETH MAC (L2) Filters configuration.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pFilterConfig: pointer to a ETH_MACFilterConfigTypeDef structure that contains
-  *         the configuration of the ETH MAC filters.
-  * @retval HAL status
-  */
+ * @brief  Set the ETH MAC (L2) Filters configuration.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pFilterConfig: pointer to a ETH_MACFilterConfigTypeDef structure that contains
+ *         the configuration of the ETH MAC filters.
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_SetMACFilterConfig(ETH_HandleTypeDef *heth, ETH_MACFilterConfigTypeDef *pFilterConfig)
 {
   uint32_t filterconfig;
@@ -2381,7 +2415,7 @@ HAL_StatusTypeDef HAL_ETH_SetMACFilterConfig(ETH_HandleTypeDef *heth, ETH_MACFil
 
   filterconfig = ((uint32_t)pFilterConfig->PromiscuousMode |
                   ((uint32_t)pFilterConfig->HashUnicast << 1) |
-                  ((uint32_t)pFilterConfig->HashMulticast << 2)  |
+                  ((uint32_t)pFilterConfig->HashMulticast << 2) |
                   ((uint32_t)pFilterConfig->DestAddrInverseFiltering << 3) |
                   ((uint32_t)pFilterConfig->PassAllMulticast << 4) |
                   ((uint32_t)((pFilterConfig->BroadcastFilter == DISABLE) ? 1U : 0U) << 5) |
@@ -2403,13 +2437,13 @@ HAL_StatusTypeDef HAL_ETH_SetMACFilterConfig(ETH_HandleTypeDef *heth, ETH_MACFil
 }
 
 /**
-  * @brief  Get the ETH MAC (L2) Filters configuration.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pFilterConfig: pointer to a ETH_MACFilterConfigTypeDef structure that will hold
-  *         the configuration of the ETH MAC filters.
-  * @retval HAL status
-  */
+ * @brief  Get the ETH MAC (L2) Filters configuration.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pFilterConfig: pointer to a ETH_MACFilterConfigTypeDef structure that will hold
+ *         the configuration of the ETH MAC filters.
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_GetMACFilterConfig(ETH_HandleTypeDef *heth, ETH_MACFilterConfigTypeDef *pFilterConfig)
 {
   if (pFilterConfig == NULL)
@@ -2421,32 +2455,39 @@ HAL_StatusTypeDef HAL_ETH_GetMACFilterConfig(ETH_HandleTypeDef *heth, ETH_MACFil
   pFilterConfig->HashUnicast = ((READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_HU) >> 1) > 0U) ? ENABLE : DISABLE;
   pFilterConfig->HashMulticast = ((READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_HM) >> 2) > 0U) ? ENABLE : DISABLE;
   pFilterConfig->DestAddrInverseFiltering = ((READ_BIT(heth->Instance->MACFFR,
-                                                       ETH_MACFFR_DAIF) >> 3) > 0U) ? ENABLE : DISABLE;
+                                                       ETH_MACFFR_DAIF) >>
+                                              3) > 0U)
+                                                ? ENABLE
+                                                : DISABLE;
   pFilterConfig->PassAllMulticast = ((READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_PAM) >> 4) > 0U) ? ENABLE : DISABLE;
   pFilterConfig->BroadcastFilter = ((READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_BFD) >> 5) == 0U) ? ENABLE : DISABLE;
   pFilterConfig->ControlPacketsFilter = READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_PCF);
   pFilterConfig->SrcAddrInverseFiltering = ((READ_BIT(heth->Instance->MACFFR,
-                                                      ETH_MACFFR_SAIF) >> 8) > 0U) ? ENABLE : DISABLE;
+                                                      ETH_MACFFR_SAIF) >>
+                                             8) > 0U)
+                                               ? ENABLE
+                                               : DISABLE;
   pFilterConfig->SrcAddrFiltering = ((READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_SAF) >> 9) > 0U) ? ENABLE : DISABLE;
   pFilterConfig->HachOrPerfectFilter = ((READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_HPF) >> 10) > 0U)
-                                       ? ENABLE : DISABLE;
+                                           ? ENABLE
+                                           : DISABLE;
   pFilterConfig->ReceiveAllMode = ((READ_BIT(heth->Instance->MACFFR, ETH_MACFFR_RA) >> 31) > 0U) ? ENABLE : DISABLE;
 
   return HAL_OK;
 }
 
 /**
-  * @brief  Set the source MAC Address to be matched.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  AddrNbr: The MAC address to configure
-  *          This parameter must be a value of the following:
-  *            ETH_MAC_ADDRESS1
-  *            ETH_MAC_ADDRESS2
-  *            ETH_MAC_ADDRESS3
-  * @param  pMACAddr: Pointer to MAC address buffer data (6 bytes)
-  * @retval HAL status
-  */
+ * @brief  Set the source MAC Address to be matched.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  AddrNbr: The MAC address to configure
+ *          This parameter must be a value of the following:
+ *            ETH_MAC_ADDRESS1
+ *            ETH_MAC_ADDRESS2
+ *            ETH_MAC_ADDRESS3
+ * @param  pMACAddr: Pointer to MAC address buffer data (6 bytes)
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_SetSourceMACAddrMatch(ETH_HandleTypeDef *heth, uint32_t AddrNbr, uint8_t *pMACAddr)
 {
   uint32_t macaddrlr;
@@ -2458,9 +2499,9 @@ HAL_StatusTypeDef HAL_ETH_SetSourceMACAddrMatch(ETH_HandleTypeDef *heth, uint32_
   }
 
   /* Get mac addr high reg offset */
-  macaddrhr = ((uint32_t) &(heth->Instance->MACA0HR) + AddrNbr);
+  macaddrhr = ((uint32_t) & (heth->Instance->MACA0HR) + AddrNbr);
   /* Get mac addr low reg offset */
-  macaddrlr = ((uint32_t) &(heth->Instance->MACA0LR) + AddrNbr);
+  macaddrlr = ((uint32_t) & (heth->Instance->MACA0LR) + AddrNbr);
 
   /* Set MAC addr bits 32 to 47 */
   (*(__IO uint32_t *)macaddrhr) = (((uint32_t)(pMACAddr[5]) << 8) | (uint32_t)pMACAddr[4]);
@@ -2475,13 +2516,13 @@ HAL_StatusTypeDef HAL_ETH_SetSourceMACAddrMatch(ETH_HandleTypeDef *heth, uint32_
 }
 
 /**
-  * @brief  Set the ETH Hash Table Value.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pHashTable: pointer to a table of two 32 bit values, that contains
-  *         the 64 bits of the hash table.
-  * @retval HAL status
-  */
+ * @brief  Set the ETH Hash Table Value.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pHashTable: pointer to a table of two 32 bit values, that contains
+ *         the 64 bits of the hash table.
+ * @retval HAL status
+ */
 HAL_StatusTypeDef HAL_ETH_SetHashTable(ETH_HandleTypeDef *heth, uint32_t *pHashTable)
 {
   uint32_t tmpreg1;
@@ -2539,13 +2580,13 @@ void HAL_ETH_SetRxVLANIdentifier(ETH_HandleTypeDef *heth, uint32_t ComparisonBit
 }
 
 /**
-  * @brief  Enters the Power down mode.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pPowerDownConfig: a pointer to ETH_PowerDownConfigTypeDef structure
-  *         that contains the Power Down configuration
-  * @retval None.
-  */
+ * @brief  Enters the Power down mode.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pPowerDownConfig: a pointer to ETH_PowerDownConfigTypeDef structure
+ *         that contains the Power Down configuration
+ * @retval None.
+ */
 void HAL_ETH_EnterPowerDownMode(ETH_HandleTypeDef *heth, ETH_PowerDownConfigTypeDef *pPowerDownConfig)
 {
   uint32_t powerdownconfig;
@@ -2559,11 +2600,11 @@ void HAL_ETH_EnterPowerDownMode(ETH_HandleTypeDef *heth, ETH_PowerDownConfigType
 }
 
 /**
-  * @brief  Exits from the Power down mode.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None.
-  */
+ * @brief  Exits from the Power down mode.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None.
+ */
 void HAL_ETH_ExitPowerDownMode(ETH_HandleTypeDef *heth)
 {
   uint32_t tmpreg1;
@@ -2594,13 +2635,13 @@ void HAL_ETH_ExitPowerDownMode(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Set the WakeUp filter.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pFilter: pointer to filter registers values
-  * @param  Count: number of filter registers, must be from 1 to 8.
-  * @retval None.
-  */
+ * @brief  Set the WakeUp filter.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pFilter: pointer to filter registers values
+ * @param  Count: number of filter registers, must be from 1 to 8.
+ * @retval None.
+ */
 HAL_StatusTypeDef HAL_ETH_SetWakeUpFilter(ETH_HandleTypeDef *heth, uint32_t *pFilter, uint32_t Count)
 {
   uint32_t regindex;
@@ -2624,8 +2665,8 @@ HAL_StatusTypeDef HAL_ETH_SetWakeUpFilter(ETH_HandleTypeDef *heth, uint32_t *pFi
 }
 
 /**
-  * @}
-  */
+ * @}
+ */
 
 /** @defgroup ETH_Exported_Functions_Group4 Peripheral State and Errors functions
   *  @brief   ETH State and Errors functions
@@ -2645,78 +2686,78 @@ HAL_StatusTypeDef HAL_ETH_SetWakeUpFilter(ETH_HandleTypeDef *heth, uint32_t *pFi
   */
 
 /**
-  * @brief  Returns the ETH state.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL state
-  */
+ * @brief  Returns the ETH state.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL state
+ */
 HAL_ETH_StateTypeDef HAL_ETH_GetState(ETH_HandleTypeDef *heth)
 {
   return heth->gState;
 }
 
 /**
-  * @brief  Returns the ETH error code
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval ETH Error Code
-  */
+ * @brief  Returns the ETH error code
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval ETH Error Code
+ */
 uint32_t HAL_ETH_GetError(ETH_HandleTypeDef *heth)
 {
   return heth->ErrorCode;
 }
 
 /**
-  * @brief  Returns the ETH DMA error code
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval ETH DMA Error Code
-  */
+ * @brief  Returns the ETH DMA error code
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval ETH DMA Error Code
+ */
 uint32_t HAL_ETH_GetDMAError(ETH_HandleTypeDef *heth)
 {
   return heth->DMAErrorCode;
 }
 
 /**
-  * @brief  Returns the ETH MAC error code
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval ETH MAC Error Code
-  */
+ * @brief  Returns the ETH MAC error code
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval ETH MAC Error Code
+ */
 uint32_t HAL_ETH_GetMACError(ETH_HandleTypeDef *heth)
 {
   return heth->MACErrorCode;
 }
 
 /**
-  * @brief  Returns the ETH MAC WakeUp event source
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval ETH MAC WakeUp event source
-  */
+ * @brief  Returns the ETH MAC WakeUp event source
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval ETH MAC WakeUp event source
+ */
 uint32_t HAL_ETH_GetMACWakeUpSource(ETH_HandleTypeDef *heth)
 {
   return heth->MACWakeUpEvent;
 }
 
 /**
-  * @}
-  */
+ * @}
+ */
 
 /**
-  * @}
-  */
+ * @}
+ */
 
 /** @addtogroup ETH_Private_Functions   ETH Private Functions
-  * @{
-  */
+ * @{
+ */
 
 /**
-  * @brief  Clears the ETHERNET transmit FIFO.
-  * @param  heth pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Clears the ETHERNET transmit FIFO.
+ * @param  heth pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 static void ETH_FlushTransmitFIFO(ETH_HandleTypeDef *heth)
 {
   __IO uint32_t tmpreg = 0;
@@ -2731,7 +2772,7 @@ static void ETH_FlushTransmitFIFO(ETH_HandleTypeDef *heth)
   (heth->Instance)->DMAOMR = tmpreg;
 }
 
-static void ETH_SetMACConfig(ETH_HandleTypeDef *heth,  ETH_MACConfigTypeDef *macconf)
+static void ETH_SetMACConfig(ETH_HandleTypeDef *heth, ETH_MACConfigTypeDef *macconf)
 {
   uint32_t tmpreg1;
 
@@ -2788,7 +2829,7 @@ static void ETH_SetMACConfig(ETH_HandleTypeDef *heth,  ETH_MACConfigTypeDef *mac
   (heth->Instance)->MACFCR = tmpreg1;
 }
 
-static void ETH_SetDMAConfig(ETH_HandleTypeDef *heth,  ETH_DMAConfigTypeDef *dmaconf)
+static void ETH_SetDMAConfig(ETH_HandleTypeDef *heth, ETH_DMAConfigTypeDef *dmaconf)
 {
   uint32_t tmpreg1;
 
@@ -2836,12 +2877,12 @@ static void ETH_SetDMAConfig(ETH_HandleTypeDef *heth,  ETH_DMAConfigTypeDef *dma
 }
 
 /**
-  * @brief  Configures Ethernet MAC and DMA with default parameters.
-  *         called by HAL_ETH_Init() API.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval HAL status
-  */
+ * @brief  Configures Ethernet MAC and DMA with default parameters.
+ *         called by HAL_ETH_Init() API.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval HAL status
+ */
 static void ETH_MACDMAConfig(ETH_HandleTypeDef *heth)
 {
   ETH_MACConfigTypeDef macDefaultConf;
@@ -2894,18 +2935,18 @@ static void ETH_MACDMAConfig(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  Configures the selected MAC address.
-  * @param  heth pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  MacAddr The MAC address to configure
-  *          This parameter can be one of the following values:
-  *             @arg ETH_MAC_Address0: MAC Address0
-  *             @arg ETH_MAC_Address1: MAC Address1
-  *             @arg ETH_MAC_Address2: MAC Address2
-  *             @arg ETH_MAC_Address3: MAC Address3
-  * @param  Addr Pointer to MAC address buffer data (6 bytes)
-  * @retval HAL status
-  */
+ * @brief  Configures the selected MAC address.
+ * @param  heth pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  MacAddr The MAC address to configure
+ *          This parameter can be one of the following values:
+ *             @arg ETH_MAC_Address0: MAC Address0
+ *             @arg ETH_MAC_Address1: MAC Address1
+ *             @arg ETH_MAC_Address2: MAC Address2
+ *             @arg ETH_MAC_Address3: MAC Address3
+ * @param  Addr Pointer to MAC address buffer data (6 bytes)
+ * @retval HAL status
+ */
 static void ETH_MACAddressConfig(ETH_HandleTypeDef *heth, uint32_t MacAddr, uint8_t *Addr)
 {
   uint32_t tmpreg1;
@@ -2925,12 +2966,12 @@ static void ETH_MACAddressConfig(ETH_HandleTypeDef *heth, uint32_t MacAddr, uint
 }
 
 /**
-  * @brief  Initializes the DMA Tx descriptors.
-  *         called by HAL_ETH_Init() API.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Initializes the DMA Tx descriptors.
+ *         called by HAL_ETH_Init() API.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 static void ETH_DMATxDescListInit(ETH_HandleTypeDef *heth)
 {
   ETH_DMADescTypeDef *dmatxdesc;
@@ -2967,16 +3008,16 @@ static void ETH_DMATxDescListInit(ETH_HandleTypeDef *heth)
   heth->TxDescList.CurTxDesc = 0;
 
   /* Set Transmit Descriptor List Address */
-  WRITE_REG(heth->Instance->DMATDLAR, (uint32_t) heth->Init.TxDesc);
+  WRITE_REG(heth->Instance->DMATDLAR, (uint32_t)heth->Init.TxDesc);
 }
 
 /**
-  * @brief  Initializes the DMA Rx descriptors in chain mode.
-  *         called by HAL_ETH_Init() API.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @retval None
-  */
+ * @brief  Initializes the DMA Rx descriptors in chain mode.
+ *         called by HAL_ETH_Init() API.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @retval None
+ */
 static void ETH_DMARxDescListInit(ETH_HandleTypeDef *heth)
 {
   ETH_DMADescTypeDef *dmarxdesc;
@@ -2984,7 +3025,7 @@ static void ETH_DMARxDescListInit(ETH_HandleTypeDef *heth)
 
   for (i = 0; i < (uint32_t)ETH_RX_DESC_CNT; i++)
   {
-    dmarxdesc =  heth->Init.RxDesc + i;
+    dmarxdesc = heth->Init.RxDesc + i;
 
     WRITE_REG(dmarxdesc->DESC0, 0x0);
     WRITE_REG(dmarxdesc->DESC1, 0x0);
@@ -3022,18 +3063,18 @@ static void ETH_DMARxDescListInit(ETH_HandleTypeDef *heth)
   WRITE_REG(heth->RxDescList.ItMode, 0);
 
   /* Set Receive Descriptor List Address */
-  WRITE_REG(heth->Instance->DMARDLAR, (uint32_t) heth->Init.RxDesc);
+  WRITE_REG(heth->Instance->DMARDLAR, (uint32_t)heth->Init.RxDesc);
 }
 
 /**
-  * @brief  Prepare Tx DMA descriptor before transmission.
-  *         called by HAL_ETH_Transmit_IT and HAL_ETH_Transmit_IT() API.
-  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
-  *         the configuration information for ETHERNET module
-  * @param  pTxConfig: Tx packet configuration
-  * @param  ItMode: Enable or disable Tx EOT interrept
-  * @retval Status
-  */
+ * @brief  Prepare Tx DMA descriptor before transmission.
+ *         called by HAL_ETH_Transmit_IT and HAL_ETH_Transmit_IT() API.
+ * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+ *         the configuration information for ETHERNET module
+ * @param  pTxConfig: Tx packet configuration
+ * @param  ItMode: Enable or disable Tx EOT interrept
+ * @retval Status
+ */
 static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacketConfig *pTxConfig, uint32_t ItMode)
 {
   ETH_TxDescListTypeDef *dmatxdesclist = &heth->TxDescList;
@@ -3043,16 +3084,14 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
   uint32_t descnbr = 0;
   ETH_DMADescTypeDef *dmatxdesc = (ETH_DMADescTypeDef *)dmatxdesclist->TxDesc[descidx];
 
-  ETH_BufferTypeDef  *txbuffer = pTxConfig->TxBuffer;
-  uint32_t           bd_count = 0;
+  ETH_BufferTypeDef *txbuffer = pTxConfig->TxBuffer;
+  uint32_t bd_count = 0;
 
   /* Current Tx Descriptor Owned by DMA: cannot be used by the application  */
-  if ((READ_BIT(dmatxdesc->DESC0, ETH_DMATXDESC_OWN) == ETH_DMATXDESC_OWN)
-      || (dmatxdesclist->PacketAddress[descidx] != NULL))
+  if ((READ_BIT(dmatxdesc->DESC0, ETH_DMATXDESC_OWN) == ETH_DMATXDESC_OWN) || (dmatxdesclist->PacketAddress[descidx] != NULL))
   {
     return HAL_ETH_ERROR_BUSY;
   }
-
 
   descnbr += 1U;
 
@@ -3071,7 +3110,6 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
   {
     MODIFY_REG(dmatxdesc->DESC0, ETH_CRC_PAD_DISABLE, pTxConfig->CRCPadCtrl);
   }
-
 
   if (READ_BIT(pTxConfig->Attributes, ETH_TX_PACKETS_FEATURES_VLANTAG) != 0U)
   {
@@ -3111,14 +3149,13 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
     CLEAR_BIT(dmatxdesc->DESC0, ETH_DMATXDESC_FS);
 
     /* Current Tx Descriptor Owned by DMA: cannot be used by the application  */
-    if ((READ_BIT(dmatxdesc->DESC0, ETH_DMATXDESC_OWN) == ETH_DMATXDESC_OWN)
-        || (dmatxdesclist->PacketAddress[descidx] != NULL))
+    if ((READ_BIT(dmatxdesc->DESC0, ETH_DMATXDESC_OWN) == ETH_DMATXDESC_OWN) || (dmatxdesclist->PacketAddress[descidx] != NULL))
     {
       descidx = firstdescidx;
       dmatxdesc = (ETH_DMADescTypeDef *)dmatxdesclist->TxDesc[descidx];
 
       /* clear previous desc own bit */
-      for (idx = 0; idx < descnbr; idx ++)
+      for (idx = 0; idx < descnbr; idx++)
       {
         /* Ensure rest of descriptor is written to RAM before the OWN bit */
         __DMB();
@@ -3179,7 +3216,6 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
   /* Enable interrupts back */
   __enable_irq();
 
-
   /* Return function status */
   return HAL_ETH_ERROR_NONE;
 }
@@ -3188,33 +3224,32 @@ static uint32_t ETH_Prepare_Tx_Descriptors(ETH_HandleTypeDef *heth, ETH_TxPacket
 static void ETH_InitCallbacksToDefault(ETH_HandleTypeDef *heth)
 {
   /* Init the ETH Callback settings */
-  heth->TxCpltCallback   = HAL_ETH_TxCpltCallback;    /* Legacy weak TxCpltCallback   */
-  heth->RxCpltCallback   = HAL_ETH_RxCpltCallback;    /* Legacy weak RxCpltCallback   */
-  heth->ErrorCallback    = HAL_ETH_ErrorCallback;     /* Legacy weak ErrorCallback */
-  heth->PMTCallback      = HAL_ETH_PMTCallback;       /* Legacy weak PMTCallback      */
-  heth->WakeUpCallback   = HAL_ETH_WakeUpCallback;    /* Legacy weak WakeUpCallback   */
-  heth->rxLinkCallback   = HAL_ETH_RxLinkCallback;    /* Legacy weak RxLinkCallback   */
-  heth->txFreeCallback   = HAL_ETH_TxFreeCallback;    /* Legacy weak TxFreeCallback   */
+  heth->TxCpltCallback = HAL_ETH_TxCpltCallback; /* Legacy weak TxCpltCallback   */
+  heth->RxCpltCallback = HAL_ETH_RxCpltCallback; /* Legacy weak RxCpltCallback   */
+  heth->ErrorCallback = HAL_ETH_ErrorCallback;   /* Legacy weak ErrorCallback */
+  heth->PMTCallback = HAL_ETH_PMTCallback;       /* Legacy weak PMTCallback      */
+  heth->WakeUpCallback = HAL_ETH_WakeUpCallback; /* Legacy weak WakeUpCallback   */
+  heth->rxLinkCallback = HAL_ETH_RxLinkCallback; /* Legacy weak RxLinkCallback   */
+  heth->txFreeCallback = HAL_ETH_TxFreeCallback; /* Legacy weak TxFreeCallback   */
 #ifdef HAL_ETH_USE_PTP
-  heth->txPtpCallback    = HAL_ETH_TxPtpCallback;     /* Legacy weak TxPtpCallback   */
-#endif /* HAL_ETH_USE_PTP */
+  heth->txPtpCallback = HAL_ETH_TxPtpCallback;           /* Legacy weak TxPtpCallback   */
+#endif                                                   /* HAL_ETH_USE_PTP */
   heth->rxAllocateCallback = HAL_ETH_RxAllocateCallback; /* Legacy weak RxAllocateCallback */
 }
 #endif /* USE_HAL_ETH_REGISTER_CALLBACKS */
 
 /**
-  * @}
-  */
+ * @}
+ */
 
 /**
-  * @}
-  */
+ * @}
+ */
 
 #endif /* ETH */
 
 #endif /* HAL_ETH_MODULE_ENABLED */
 
 /**
-  * @}
-  */
-
+ * @}
+ */
